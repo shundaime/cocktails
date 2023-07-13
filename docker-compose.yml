@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+    vuejs:
+        build:
+            context: ./docker/
+        container_name: 'vuejs'
+        restart: 'always'
+        ports:
+            - '80:5173'
+        volumes:
+            - ./cocktails-front/:/var/www/html
