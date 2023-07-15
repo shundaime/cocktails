@@ -1,6 +1,10 @@
-import './assets/main.css'
+import './index.css'
+
+//Librairie d'icone https://phosphoricons.com/
+import PhosphorIcons from "@phosphor-icons/vue"
 
 import { createApp } from 'vue'
+
 import App from './App.vue'
 
-createApp(App).mount('#app')
+createApp(App).use(PhosphorIcons).mount('#app')
