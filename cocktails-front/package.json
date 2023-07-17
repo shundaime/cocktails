@@ -15,7 +15,6 @@
     },
     "dependencies": {
         "@phosphor-icons/vue": "^2.1.4",
-        "axios": "^1.4.0",
         "vue": "^3.3.4"
     },
     "devDependencies": {
