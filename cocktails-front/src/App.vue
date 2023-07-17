@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import { ref, onMounted, type Ref } from 'vue';
+
+// components/layout
 import Header from './components/layout/AppHeader.vue';
 import Main from './components/layout/AppMain.vue';
-import Loader from './components/ui/AppLoader.vue';
-import Button from './components/ui/AppButton.vue';
 
-import axios from 'axios';
-import { ref, onMounted, type Ref } from 'vue';
+// components/ui
+import Loader from './components/ui/AppLoader.vue';
+import AppButton from './components/ui/AppButton.vue';
+
+// components/utils
+import { fetchApi } from './components/utils/fetchApi';
 
 interface CocktailType {
     idDrink?: string;
@@ -23,32 +28,28 @@ const showInstructions = ref(false);
 const selectedCocktail = ref();
 const loading = ref(true);
 
-type CocktailResponseType = {
-    drinks: CocktailType[];
-};
-
 // method to call the api
 const fetchCocktails = async () => {
-    const cocktails = [];
+    const cocktails: CocktailType[] = [];
     const ids = new Set();
     errorMessage.value = '';
     loading.value = true;
-    while (cocktails.length < 3) {
-        try {
-            const response = await axios.get('https://www.thecocktaildb.com/api/json/v1/1/random.php');
-            const data: CocktailResponseType = response.data;
-            const cocktail = data.drinks[0];
+    try {
+        while (cocktails.length < 3) {
+            const response = await fetchApi('https://www.thecocktaildb.com/api/json/v1/1/random.php');
+            const cocktail = response.drinks[0];
             if (!ids.has(cocktail.idDrink)) {
                 cocktails.push(cocktail);
                 ids.add(cocktail.idDrink);
             }
-        } catch (error) {
-            console.error('Error fetching cocktails:', error);
-            errorMessage.value = 'An error occurred while fetching cocktails.';
         }
+    } catch (error) {
+        console.error('Error fetching cocktails:', error);
+        errorMessage.value = 'An error occurred while fetching cocktails.';
+    } finally {
+        randomCocktail.value = cocktails;
+        loading.value = false;
     }
-    randomCocktail.value = cocktails;
-    loading.value = false;
 };
 
 // method to show details of target cocktail
@@ -65,7 +66,7 @@ const toggleDetails = (cocktail: CocktailType) => {
 const getIngredientsAndMeasures = (cocktail: CocktailType) => {
     const ingredients = [];
     const measures = [];
-    for (let index = 1; index <= 10; index++) {
+    for (let index = 0; index <= 10; index++) {
         const ingredient = cocktail['strIngredient' + index];
         const measure = cocktail['strMeasure' + index];
         if (ingredient && measure) {
@@ -77,6 +78,8 @@ const getIngredientsAndMeasures = (cocktail: CocktailType) => {
 };
 
 onMounted(fetchCocktails);
+
+console.log(randomCocktail);
 </script>
 
 <template>
@@ -86,12 +89,12 @@ onMounted(fetchCocktails);
             <Loader v-if="loading" />
 
             <section v-else class="flex flex-col justify-end h-full gap-4">
-                <Button text="Fetch new cocktails" @click="fetchCocktails">
+                <AppButton text="Fetch new cocktails" @action="fetchCocktails">
                     <ph-martini
                         :size="24"
                         color="#04d9ff"
                         class="transition duration-300 group-hover:scale-110 group-hover:transform-shake"
-                /></Button>
+                /></AppButton>
                 <ul
                     class="flex flex-col gap-4 p-2 mx-auto overflow-auto max-h-fit max-sm:h-[calc(100vh-124px)] sm:p-4 lg:grid lg:grid-cols-3 md:gap-8 lg:gap-12 xl:gap-16 2xl:gap-32"
                 >
@@ -108,9 +111,9 @@ onMounted(fetchCocktails);
                                     <h2 class="z-10 font-bold">
                                         {{ cocktail.strDrink }}
                                     </h2>
-                                    <Button
+                                    <AppButton
                                         :text="selectedCocktail === cocktail ? 'Hide details' : 'Show details'"
-                                        @click="toggleDetails(cocktail)"
+                                        @action="toggleDetails(cocktail)"
                                     />
                                     <transition name="fade" appear>
                                         <div

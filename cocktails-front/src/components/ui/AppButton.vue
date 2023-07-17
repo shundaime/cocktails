@@ -1,23 +1,19 @@
 <template>
-  <button
-    class="flex gap-1 items-center px-2 py-1 mx-auto text-xl bg-violet-500 rounded-lg border-2 transition duration-500 sm:text-2xl group border-neon-500 w-fit hover:bg-violet-400 hover:shadow-md hover:shadow-neon-500"
-    @click="onClick"
-  >
-    {{ text }}
-    <slot></slot>
-  </button>
+    <button
+        class="flex items-center gap-1 px-2 py-1 mx-auto text-xl transition duration-500 border-2 rounded-lg bg-violet-500 sm:text-2xl group border-neon-500 w-fit hover:bg-violet-400 hover:shadow-md hover:shadow-neon-500"
+        @click="onClick"
+    >
+        {{ text }}
+        <slot></slot>
+    </button>
 </template>
 
-<script lang="ts">
-export default {
-  props: {
-    text: {
-      type: String,
-      required: true
-    }
-  },
-  methods: {
-    onClick() {}
-  }
+<script setup lang="ts">
+defineProps<{ text: string }>();
+
+const emit = defineEmits<(e: 'action') => void>();
+
+function onClick() {
+    emit('action');
 }
 </script>
