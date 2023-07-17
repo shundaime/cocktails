@@ -13,9 +13,21 @@
         src: url(./assets/fonts/Monoton.ttf);
     }
 
+    @font-face {
+      font-family: DancingScript;
+      src: url(./assets/fonts/DancingScript.ttf);
+  }
+
     h1{
         @apply text-2xl lg:text-7xl md:text-5xl sm:text-3xl;
         font-family: Rocket, sans-serif;
+        color: #EDAA22;
+        text-shadow:
+        0 0 16px #EDAA22,
+        0 0 32px #EDAA22,
+        0 0 64px #EDAA22,
+        0 0 90px #EDAA22,
+        0 0 124px #EDAA22;
     }
 
     h2{
@@ -25,10 +37,12 @@
 }
 
 @layer components {
+
+    /* Global */
     body {
         @apply min-h-screen text-base text-neutral-50;
         line-height: 1.6;
-        font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+        font-family: DancingScript, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
           Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
@@ -36,7 +50,7 @@
     }
 
     #app{
-        @apply flex w-full h-screen px-4 pt-4 pb-2 mx-auto overflow-auto bg-bottom bg-no-repeat bg-cover bg-main sm:pb-8 sm:pt-8 sm:px-8 lg:px-12;
+        @apply relative flex w-full h-screen px-4 pt-4 pb-2 mx-auto overflow-hidden bg-bottom bg-no-repeat bg-cover bg-main sm:pb-8 sm:pt-8 sm:px-8 lg:px-12;
     }
 
     h1 span{
@@ -96,6 +110,10 @@
 
       .spinner{
         animation: rotateSpinner 800ms linear infinite;
+      }
+
+      figure{
+        @apply text-2xl;
       }
 
       @keyframes rotateSpinner {
