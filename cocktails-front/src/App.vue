@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import Button from './components/v-button.vue';
+import Header from './components/layout/AppHeader.vue';
+import Main from './components/layout/AppMain.vue';
+import Loader from './components/ui/AppLoader.vue';
+import Button from './components/ui/AppButton.vue';
+
 import axios from 'axios';
 import { ref, onMounted, type Ref } from 'vue';
 
@@ -17,15 +21,18 @@ const randomCocktail: Ref<null | CocktailType[]> = ref(null);
 const errorMessage = ref('');
 const showInstructions = ref(false);
 const selectedCocktail = ref();
+const loading = ref(true);
 
 type CocktailResponseType = {
     drinks: CocktailType[];
 };
 
+// method to call the api
 const fetchCocktails = async () => {
     const cocktails = [];
     const ids = new Set();
     errorMessage.value = '';
+    loading.value = true;
     while (cocktails.length < 3) {
         try {
             const response = await axios.get('https://www.thecocktaildb.com/api/json/v1/1/random.php');
@@ -41,9 +48,11 @@ const fetchCocktails = async () => {
         }
     }
     randomCocktail.value = cocktails;
+    loading.value = false;
 };
 
-const toggleInstructions = (cocktail: CocktailType) => {
+// method to show details of target cocktail
+const toggleDetails = (cocktail: CocktailType) => {
     if (selectedCocktail.value === cocktail) {
         selectedCocktail.value = null;
     } else {
@@ -52,6 +61,7 @@ const toggleInstructions = (cocktail: CocktailType) => {
     showInstructions.value = false;
 };
 
+// method to get ingredients and measures in arrays
 const getIngredientsAndMeasures = (cocktail: CocktailType) => {
     const ingredients = [];
     const measures = [];
@@ -70,26 +80,12 @@ onMounted(fetchCocktails);
 </script>
 
 <template>
-    <div class="flex flex-col justify-between w-full h-full gap-4 m-auto">
-        <header class="relative flex justify-center mx-auto text-center h-fit w-fit">
-            <h1>Cocktail <span>Paradise</span></h1>
-            <span class="neon">Open</span>
-        </header>
-        <main class="flex flex-col gap-2">
-            <div
-                v-if="errorMessage"
-                class="absolute p-4 my-auto font-sans bg-red-300 rounded-md top-4 right-4 left-4 text-red-950"
-            >
-                {{ errorMessage }}
-            </div>
-            <div
-                class="absolute top-0 left-0 z-20 flex items-center justify-center w-full h-full gap-4 m-auto text-4xl font-bold rounded-md opacity-60 bg-neutral-900"
-                v-if="!randomCocktail"
-            >
-                Loading...
-                <ph-circle-notch :size="32" weigt="bold" color="#04d9ff" class="spinner" />
-            </div>
-            <section v-else class="flex flex-col gap-4">
+    <div class="flex flex-col w-full h-full gap-4">
+        <Header />
+        <Main>
+            <Loader v-if="loading" />
+
+            <section v-else class="flex flex-col justify-end h-full gap-4">
                 <Button text="Fetch new cocktails" @click="fetchCocktails">
                     <ph-martini
                         :size="24"
@@ -105,6 +101,7 @@ onMounted(fetchCocktails);
                                 <img
                                     :src="cocktail.strDrinkThumb"
                                     :alt="cocktail.strDrink"
+                                    @load="loading = false"
                                     class="object-cover w-full rounded-t-lg h-72 md:h-96"
                                 />
                                 <caption class="flex flex-col justify-center w-full gap-4 p-4 transition bg-violet-500">
@@ -113,7 +110,7 @@ onMounted(fetchCocktails);
                                     </h2>
                                     <Button
                                         :text="selectedCocktail === cocktail ? 'Hide details' : 'Show details'"
-                                        @click="toggleInstructions(cocktail)"
+                                        @click="toggleDetails(cocktail)"
                                     />
                                     <transition name="fade" appear>
                                         <div
@@ -139,7 +136,7 @@ onMounted(fetchCocktails);
                     </li>
                 </ul>
             </section>
-        </main>
+        </Main>
     </div>
 </template>
 

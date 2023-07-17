@@ -50,7 +50,7 @@
     }
 
     #app{
-        @apply relative flex w-full h-screen px-4 pt-4 pb-2 mx-auto overflow-hidden bg-bottom bg-no-repeat bg-cover bg-main sm:pb-8 sm:pt-8 sm:px-8 lg:px-12;
+        @apply flex overflow-hidden relative flex-col gap-4 px-4 pt-4 pb-2 mx-auto w-full h-screen bg-bottom bg-no-repeat bg-cover bg-main sm:pb-8 sm:pt-8 sm:px-8 lg:px-12;
     }
 
     h1 span{
@@ -68,7 +68,7 @@
     }
 
     .neon {
-        @apply absolute hidden text-2xl text-center uppercase transform rounded-full top-12 -right-32 -rotate-12 sm:flex sm:text-3xl sm:p-8 max-w-fit;
+        @apply hidden absolute top-12 -right-32 text-2xl text-center uppercase rounded-full transform -rotate-12 sm:flex sm:text-3xl sm:p-8 max-w-fit;
         color: #ffd6d6;
         border: 4px solid #c6e2ff;
         border-radius: 50%;
@@ -101,7 +101,7 @@
       }
 
       .neon-no-blink{
-        @apply border-4 rounded-lg border-neon-500;
+        @apply rounded-lg border-4 border-neon-500;
         box-shadow:
         inset 0 0 32px #04d9ff,
         0 0 14px #04d9ff,
