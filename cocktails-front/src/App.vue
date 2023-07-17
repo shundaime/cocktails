@@ -78,8 +78,6 @@ const getIngredientsAndMeasures = (cocktail: CocktailType) => {
 };
 
 onMounted(fetchCocktails);
-
-console.log(randomCocktail);
 </script>
 
 <template>
