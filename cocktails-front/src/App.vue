@@ -8,6 +8,7 @@ import Main from './components/layout/AppMain.vue';
 // components/ui
 import Loader from './components/ui/AppLoader.vue';
 import AppButton from './components/ui/AppButton.vue';
+import AppError from './components/ui/AppError.vue';
 
 // components/utils
 import { fetchApi } from './components/utils/fetchApi';
@@ -45,7 +46,7 @@ const fetchCocktails = async () => {
         }
     } catch (error) {
         console.error('Error fetching cocktails:', error);
-        errorMessage.value = 'An error occurred while fetching cocktails.';
+        errorMessage.value = 'An error occurred with the server while fetching cocktails.';
     } finally {
         randomCocktail.value = cocktails;
         loading.value = false;
@@ -81,31 +82,34 @@ onMounted(fetchCocktails);
 </script>
 
 <template>
-    <div class="flex flex-col w-full h-full gap-4">
+    <AppError v-if="errorMessage" :text="errorMessage" />
+    <div v-else class="flex flex-col gap-4 w-full h-full">
         <Header />
         <Main>
-            <Loader v-if="loading" />
-
-            <section v-else class="flex flex-col justify-end h-full gap-4">
-                <AppButton text="Fetch new cocktails" @action="fetchCocktails">
+            <section class="flex flex-col gap-4 justify-end h-full">
+                <AppButton text="Fetch new cocktails" :isDisabled="loading" @action="fetchCocktails">
+                    <ph-circle-notch v-if="loading" :size="32" weight="bold" color="#04d9ff" class="spinner" />
                     <ph-martini
-                        :size="24"
+                        v-else
+                        :size="32"
+                        weight="bold"
                         color="#04d9ff"
                         class="transition duration-300 group-hover:scale-110 group-hover:transform-shake"
-                /></AppButton>
+                    />
+                </AppButton>
                 <ul
-                    class="flex flex-col gap-4 p-2 mx-auto overflow-auto max-h-fit max-sm:h-[calc(100vh-124px)] sm:p-4 lg:grid lg:grid-cols-3 md:gap-8 lg:gap-12 xl:gap-16 2xl:gap-32"
+                    class="flex flex-col gap-4 mx-auto overflow-auto max-h-fit max-sm:h-[calc(100vh-124px)] lg:grid lg:grid-cols-3 md:gap-8 lg:gap-12 xl:gap-16 2xl:gap-32"
                 >
                     <li v-for="cocktail in randomCocktail" :key="cocktail.idDrink" class="flex w-full group">
                         <transition name="fade" appear>
-                            <figure class="relative grid w-full overflow-hidden rounded-lg neon-no-blink">
+                            <figure class="grid overflow-hidden relative w-full rounded-lg neon-no-blink">
                                 <img
                                     :src="cocktail.strDrinkThumb"
                                     :alt="cocktail.strDrink"
                                     @load="loading = false"
-                                    class="object-cover w-full rounded-t-lg h-72 md:h-96"
+                                    class="object-cover w-full h-72 rounded-t-lg md:h-96"
                                 />
-                                <caption class="flex flex-col justify-center w-full gap-4 p-4 transition bg-violet-500">
+                                <caption class="flex flex-col gap-4 justify-center p-4 w-full bg-violet-500 transition">
                                     <h2 class="z-10 font-bold">
                                         {{ cocktail.strDrink }}
                                     </h2>
