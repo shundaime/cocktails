@@ -71,7 +71,7 @@ onMounted(fetchCocktails);
                     class="flex flex-col gap-4 sm:mx-auto lg:grid lg:grid-cols-3 md:gap-8 lg:gap-12 xl:gap-16 2xl:gap-32"
                 >
                     <li v-for="cocktail in randomCocktail" :key="cocktail.idDrink" class="flex w-full group">
-                        <AppCard :cocktail="cocktail" :loading="loading" :selectedCocktail="null" />
+                        <AppCard :cocktail="cocktail" :loading="loading" />
                     </li>
                 </ul>
             </section>

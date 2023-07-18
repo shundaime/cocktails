@@ -20,6 +20,7 @@
                     <AppButton
                         class="absolute right-0 border-none hover:shadow-none hover:bg-violet-500 top-1 focus:border-none hover:scale-105"
                         text=""
+                        title="close"
                         :isDisabled="false"
                         @action="toggleDetails(cocktail)"
                     >
