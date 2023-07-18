@@ -10,29 +10,34 @@
                 <h2>
                     {{ cocktail.strDrink }}
                 </h2>
-                <AppButton
-                    :text="selectedCocktail === cocktail ? 'Hide details' : 'Show details'"
-                    :isDisabled="false"
-                    @action="toggleDetails(cocktail)"
-                />
-                <transition name="fade" appear>
-                    <div
-                        v-if="selectedCocktail === cocktail"
-                        class="flex text-2xl absolute top-0 right-0 flex-col gap-2 p-4 w-full h-full max-h-[calc(100%-124px)] bg-violet-500 rounded-t-lg opacity-90 text-neutral-50"
-                    >
-                        <ul>
-                            <li
-                                v-for="(ingredient, index) in getIngredientsAndMeasures(cocktail).ingredients"
-                                :key="index"
-                            >
-                                {{ ingredient }} :
-                                {{ getIngredientsAndMeasures(cocktail).measures[index] }}
-                            </li>
-                        </ul>
-                        <p class="overflow-auto">{{ cocktail.strInstructions }}</p>
-                    </div>
-                </transition>
+                <AppButton text="Show details" :isDisabled="false" @action="toggleDetails(cocktail)" />
             </caption>
+            <transition name="fade" appear>
+                <div
+                    v-if="selectedCocktail === cocktail"
+                    class="absolute top-0 right-0 flex flex-col w-full h-full gap-4 p-4 overflow-auto text-2xl text-left rounded-t-lg bg-violet-500 opacity-90 text-neutral-50"
+                >
+                    <AppButton
+                        class="absolute right-0 border-none top-1 focus:border-none"
+                        text=""
+                        :isDisabled="false"
+                        @action="toggleDetails(cocktail)"
+                    >
+                        <ph-x-circle :size="32" color="#04d9ff" />
+                    </AppButton>
+                    <ul>
+                        <li class="font-bold">Ingredients</li>
+                        <li v-for="(ingredient, index) in getIngredientsAndMeasures(cocktail).ingredients" :key="index">
+                            {{ ingredient }} :
+                            {{ getIngredientsAndMeasures(cocktail).measures[index] }}
+                        </li>
+                    </ul>
+                    <ul>
+                        <li class="font-bold">Instructions</li>
+                        <li>{{ cocktail.strInstructions }}</li>
+                    </ul>
+                </div>
+            </transition>
         </figure>
     </transition>
 </template>

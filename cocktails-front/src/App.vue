@@ -68,7 +68,7 @@ onMounted(fetchCocktails);
                     />
                 </AppButton>
                 <ul
-                    class="flex flex-col gap-4 mx-auto overflow-auto max-h-fit max-sm:h-[calc(100vh-124px)] lg:grid lg:grid-cols-3 md:gap-8 lg:gap-12 xl:gap-16 2xl:gap-32"
+                    class="flex flex-col gap-4 sm:mx-auto lg:grid lg:grid-cols-3 md:gap-8 lg:gap-12 xl:gap-16 2xl:gap-32"
                 >
                     <li v-for="cocktail in randomCocktail" :key="cocktail.idDrink" class="flex w-full group">
                         <AppCard :cocktail="cocktail" :loading="loading" :selectedCocktail="null" />
