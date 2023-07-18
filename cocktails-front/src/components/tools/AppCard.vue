@@ -1,18 +1,18 @@
 <template>
     <transition name="fade" appear>
-        <figure class="relative grid w-full overflow-hidden rounded-lg neon-no-blink">
+        <figure class="grid overflow-hidden relative w-full rounded-lg neon-no-blink">
             <img
                 :src="cocktail.strDrinkThumb"
                 :alt="cocktail.strDrink"
-                @load="loading = false"
-                class="object-cover w-full rounded-t-lg h-72 md:h-96"
+                class="object-cover w-full h-72 rounded-t-lg md:h-96"
             />
-            <caption class="flex flex-col justify-center w-full gap-4 p-4 transition bg-violet-500">
+            <caption class="flex flex-col gap-4 justify-center p-4 w-full bg-violet-500 transition">
                 <h2 class="z-10 font-bold">
                     {{ cocktail.strDrink }}
                 </h2>
-                <AppButtonVue
+                <AppButton
                     :text="selectedCocktail === cocktail ? 'Hide details' : 'Show details'"
+                    :isDisabled="false"
                     @action="toggleDetails(cocktail)"
                 />
                 <transition name="fade" appear>
@@ -38,19 +38,41 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ cocktail: Object; selectedCocktail: Object }>();
+
+import type { CocktailType } from '@/shared/interface/CocktailType';
+import AppButton from './AppButton.vue';
+import { toRefs, ref } from 'vue';
+
+const props = defineProps<{ cocktail: CocktailType, selectedCocktail: CocktailType | null, loading: boolean }>()
 const emit = defineEmits<{
-    (e: 'toggleDetails', cocktail: Object): void;
-}>();
+    (e: 'toggleDetails', cocktail: CocktailType): void
+  }>()
 
-function toggleDetails() {
-    emit('toggleDetails', props.cocktail);
-}
+  const showInstructions = ref(false);
 
-function getIngredientsAndMeasures() {
-    return {
-        ingredients: [],
-        measures: [],
-    };
-}
+  const getIngredientsAndMeasures = (cocktail: CocktailType) => {
+    const ingredients = [];
+    const measures = [];
+    for (let index = 1; index <= 15; index++) {
+        const ingredient = cocktail['strIngredient' + index];
+        const measure = cocktail['strMeasure' + index];
+        if (ingredient && measure) {
+            ingredients.push(ingredient);
+            measures.push(measure);
+        }
+    }
+    return { ingredients, measures };
+};
+
+const { selectedCocktail } = toRefs(props);
+
+// method to show details of target cocktail
+const toggleDetails = (cocktail: CocktailType) => {
+    if (selectedCocktail.value === cocktail) {
+        selectedCocktail.value = null;
+    } else {
+        selectedCocktail.value = cocktail;
+    }
+    showInstructions.value = false;
+};
 </script>

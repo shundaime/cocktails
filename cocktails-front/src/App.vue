@@ -5,28 +5,29 @@ import { ref, onMounted, type Ref } from 'vue';
 import Header from './components/layout/AppHeader.vue';
 import Main from './components/layout/AppMain.vue';
 
-// ui
-import AppButton from './components/ui/AppButton.vue';
-import AppError from './components/ui/AppError.vue';
+// tools
+import AppButton from './components/tools/AppButton.vue';
+import AppError from './components/tools/AppError.vue';
+import AppLoader from './components/tools/AppLoader.vue'
+import AppCard from './components/tools/AppCard.vue';
 
 // service
-import { fetchApi } from './shared/services/fetchApi';
+import { fetchApi } from './shared/api/fetchApi';
 
 // interface
 import type { CocktailType } from './shared/interface/CocktailType';
 
 const randomCocktail: Ref<null | CocktailType[]> = ref(null);
 const errorMessage = ref('');
-const showInstructions = ref(false);
-const selectedCocktail = ref();
 const loading = ref(true);
+const loadData = ref(true);
 
 // method to call the api
 const fetchCocktails = async () => {
     const cocktails: CocktailType[] = [];
     const ids = new Set();
     errorMessage.value = '';
-    loading.value = true;
+    loadData.value = true;
     try {
         while (cocktails.length < 3) {
             const response = await fetchApi('https://www.thecocktaildb.com/api/json/v1/1/random.php');
@@ -41,33 +42,9 @@ const fetchCocktails = async () => {
         errorMessage.value = 'An error occurred with the server while fetching cocktails.';
     } finally {
         randomCocktail.value = cocktails;
+        loadData.value = false;
         loading.value = false;
     }
-};
-
-// method to show details of target cocktail
-const toggleDetails = (cocktail: CocktailType) => {
-    if (selectedCocktail.value === cocktail) {
-        selectedCocktail.value = null;
-    } else {
-        selectedCocktail.value = cocktail;
-    }
-    showInstructions.value = false;
-};
-
-// method to get ingredients and measures in arrays
-const getIngredientsAndMeasures = (cocktail: CocktailType) => {
-    const ingredients = [];
-    const measures = [];
-    for (let index = 0; index <= 10; index++) {
-        const ingredient = cocktail['strIngredient' + index];
-        const measure = cocktail['strMeasure' + index];
-        if (ingredient && measure) {
-            ingredients.push(ingredient);
-            measures.push(measure);
-        }
-    }
-    return { ingredients, measures };
 };
 
 onMounted(fetchCocktails);
@@ -75,12 +52,13 @@ onMounted(fetchCocktails);
 
 <template>
     <AppError v-if="errorMessage" :text="errorMessage" />
-    <div v-else class="flex flex-col w-full h-full gap-4">
+    <AppLoader v-if="loading" />
+    <div v-else class="flex flex-col gap-4 w-full h-full">
         <Header />
         <Main>
-            <section class="flex flex-col justify-end h-full gap-4">
-                <AppButton text="Fetch new cocktails" :isDisabled="loading" @action="fetchCocktails">
-                    <ph-circle-notch v-if="loading" :size="32" weight="bold" color="#04d9ff" class="spinner" />
+            <section class="flex flex-col gap-4 justify-end h-full">
+                <AppButton text="Fetch new cocktails" :isDisabled="loadData" @action="fetchCocktails">
+                    <ph-circle-notch v-if="loadData" :size="32" weight="bold" color="#04d9ff" class="spinner" />
                     <ph-martini
                         v-else
                         :size="32"
@@ -93,44 +71,11 @@ onMounted(fetchCocktails);
                     class="flex flex-col gap-4 mx-auto overflow-auto max-h-fit max-sm:h-[calc(100vh-124px)] lg:grid lg:grid-cols-3 md:gap-8 lg:gap-12 xl:gap-16 2xl:gap-32"
                 >
                     <li v-for="cocktail in randomCocktail" :key="cocktail.idDrink" class="flex w-full group">
-                        <transition name="fade" appear>
-                            <figure class="relative grid w-full overflow-hidden rounded-lg neon-no-blink">
-                                <img
-                                    :src="cocktail.strDrinkThumb"
-                                    :alt="cocktail.strDrink"
-                                    @load="loading = false"
-                                    class="object-cover w-full rounded-t-lg h-72 md:h-96"
-                                />
-                                <caption class="flex flex-col justify-center w-full gap-4 p-4 transition bg-violet-500">
-                                    <h2 class="z-10 font-bold">
-                                        {{ cocktail.strDrink }}
-                                    </h2>
-                                    <AppButton
-                                        :text="selectedCocktail === cocktail ? 'Hide details' : 'Show details'"
-                                        :isDisabled="false"
-                                        @action="toggleDetails(cocktail)"
-                                    />
-                                    <transition name="fade" appear>
-                                        <div
-                                            v-if="selectedCocktail === cocktail"
-                                            class="flex absolute top-0 right-0 flex-col gap-2 p-4 w-full h-full max-h-[calc(100%-124px)] bg-violet-500 rounded-t-lg opacity-90 text-neutral-50"
-                                        >
-                                            <ul>
-                                                <li
-                                                    v-for="(ingredient, index) in getIngredientsAndMeasures(cocktail)
-                                                        .ingredients"
-                                                    :key="index"
-                                                >
-                                                    {{ ingredient }} :
-                                                    {{ getIngredientsAndMeasures(cocktail).measures[index] }}
-                                                </li>
-                                            </ul>
-                                            <p class="overflow-auto">{{ cocktail.strInstructions }}</p>
-                                        </div>
-                                    </transition>
-                                </caption>
-                            </figure>
-                        </transition>
+                        <AppCard
+                            :cocktail="cocktail"
+                            :loading="loading"
+                            :selectedCocktail="null"
+                        />
                     </li>
                 </ul>
             </section>
@@ -149,3 +94,4 @@ onMounted(fetchCocktails);
     transition: opacity 0.5s ease-in-out;
 }
 </style>
+./shared/Api/fetchApi
