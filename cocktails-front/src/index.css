@@ -4,71 +4,68 @@
 
 @layer base{
     @font-face {
-        font-family: Rocket;
-        src: url(./assets/fonts/RocketClouds.ttf);
+      font-family: Rocket;
+      src: url(./assets/fonts/RocketClouds.ttf);
+      font-display: swap;
     }
 
     @font-face {
-        font-family: Monoton;
-        src: url(./assets/fonts/Monoton.ttf);
+      font-family: Monoton;
+      src: url(./assets/fonts/Monoton.ttf);
+      font-display: swap;
     }
 
     @font-face {
       font-family: DancingScript;
       src: url(./assets/fonts/DancingScript.ttf);
+      font-display: swap;
   }
 
-    h1{
-        @apply text-2xl lg:text-7xl md:text-5xl sm:text-3xl;
-        font-family: Rocket, sans-serif;
-        color: #EDAA22;
-        text-shadow:
-        0 0 16px #EDAA22,
-        0 0 32px #EDAA22,
-        0 0 64px #EDAA22,
-        0 0 90px #EDAA22,
-        0 0 124px #EDAA22;
-    }
+  body {
+    @apply min-h-screen text-base text-neutral-50;
+    line-height: 1.6;
+    font-family: DancingScript, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+      Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-    h2{
-        font-family: Rocket, sans-serif;
-        @apply w-full text-2xl;
-    }
+  #app{
+      @apply relative flex flex-col w-full h-screen gap-4 px-4 pt-4 pb-2 mx-auto overflow-hidden bg-bottom bg-no-repeat bg-cover bg-main sm:pb-8 sm:pt-8 sm:px-8 lg:px-12;
+  }
+
+  h1{
+      @apply text-2xl lg:text-7xl md:text-5xl sm:text-3xl;
+      font-family: Rocket, sans-serif;
+      color: #EDAA22;
+      text-shadow:
+      0 0 16px #EDAA22,
+      0 0 32px #EDAA22,
+      0 0 64px #EDAA22,
+      0 0 90px #EDAA22,
+      0 0 124px #EDAA22;
+  }
+
+  h2{
+      font-family: DancingScript, sans-serif;
+      @apply z-10 w-full text-2xl font-bold;
+  }
 }
 
 @layer components {
-
-    /* Global */
-    body {
-        @apply min-h-screen text-base text-neutral-50;
-        line-height: 1.6;
-        font-family: DancingScript, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-          Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
-    #app{
-        @apply flex overflow-hidden relative flex-col gap-4 px-4 pt-4 pb-2 mx-auto w-full h-screen bg-bottom bg-no-repeat bg-cover bg-main sm:pb-8 sm:pt-8 sm:px-8 lg:px-12;
-    }
-
     h1 span{
-        color: #04d9ff;
-        text-shadow:
-        0 0 16px #04d9ff,
-        0 0 32px #04d9ff,
-        0 0 64px #04d9ff,
-        0 0 90px #04d9ff,
-        0 0 124px #04d9ff;
-    }
-
-    .modal{
-      @apply absolute top-0 right-0 z-10 w-full h-full bg-violet-800;
+      color: #04d9ff;
+      text-shadow:
+      0 0 16px #04d9ff,
+      0 0 32px #04d9ff,
+      0 0 64px #04d9ff,
+      0 0 90px #04d9ff,
+      0 0 124px #04d9ff;
     }
 
     .neon {
-        @apply hidden absolute top-12 -right-32 text-2xl text-center uppercase rounded-full transform -rotate-12 sm:flex sm:text-3xl sm:p-8 max-w-fit;
+        @apply absolute hidden text-2xl text-center uppercase transform rounded-full top-12 -right-32 -rotate-12 sm:flex sm:text-3xl sm:p-8 max-w-fit;
         color: #ffd6d6;
         border: 4px solid #c6e2ff;
         border-radius: 50%;
@@ -94,14 +91,14 @@
               0 0 64px #04d9ff,
               inset 0 0 64px #04d9ff;
           }
-          20%, 34%, 41% {        
+          20%, 34%, 41% {
             text-shadow: none;
             box-shadow: none;
           }    
       }
 
       .neon-no-blink{
-        @apply rounded-lg border-4 border-neon-500;
+        @apply border-4 rounded-lg border-neon-500;
         box-shadow:
         inset 0 0 32px #04d9ff,
         0 0 14px #04d9ff,
@@ -110,10 +107,6 @@
 
       .spinner{
         animation: rotateSpinner 800ms linear infinite;
-      }
-
-      figure{
-        @apply text-2xl;
       }
 
       @keyframes rotateSpinner {

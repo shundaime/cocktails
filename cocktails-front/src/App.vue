@@ -8,7 +8,7 @@ import Main from './components/layout/AppMain.vue';
 // tools
 import AppButton from './components/tools/AppButton.vue';
 import AppError from './components/tools/AppError.vue';
-import AppLoader from './components/tools/AppLoader.vue'
+import AppLoader from './components/tools/AppLoader.vue';
 import AppCard from './components/tools/AppCard.vue';
 
 // service
@@ -53,10 +53,10 @@ onMounted(fetchCocktails);
 <template>
     <AppError v-if="errorMessage" :text="errorMessage" />
     <AppLoader v-if="loading" />
-    <div v-else class="flex flex-col gap-4 w-full h-full">
+    <div v-else class="flex flex-col w-full h-full gap-4">
         <Header />
         <Main>
-            <section class="flex flex-col gap-4 justify-end h-full">
+            <section class="flex flex-col justify-end h-full gap-4">
                 <AppButton text="Fetch new cocktails" :isDisabled="loadData" @action="fetchCocktails">
                     <ph-circle-notch v-if="loadData" :size="32" weight="bold" color="#04d9ff" class="spinner" />
                     <ph-martini
@@ -71,11 +71,7 @@ onMounted(fetchCocktails);
                     class="flex flex-col gap-4 mx-auto overflow-auto max-h-fit max-sm:h-[calc(100vh-124px)] lg:grid lg:grid-cols-3 md:gap-8 lg:gap-12 xl:gap-16 2xl:gap-32"
                 >
                     <li v-for="cocktail in randomCocktail" :key="cocktail.idDrink" class="flex w-full group">
-                        <AppCard
-                            :cocktail="cocktail"
-                            :loading="loading"
-                            :selectedCocktail="null"
-                        />
+                        <AppCard :cocktail="cocktail" :loading="loading" :selectedCocktail="null" />
                     </li>
                 </ul>
             </section>
@@ -94,4 +90,3 @@ onMounted(fetchCocktails);
     transition: opacity 0.5s ease-in-out;
 }
 </style>
-./shared/Api/fetchApi
