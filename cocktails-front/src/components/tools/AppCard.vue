@@ -15,10 +15,10 @@
             <transition name="fade" appear>
                 <div
                     v-if="selectedCocktail === cocktail"
-                    class="absolute top-0 right-0 flex flex-col w-full h-full gap-4 p-4 overflow-auto text-2xl text-left rounded-t-lg bg-violet-500 opacity-90 text-neutral-50"
+                    class="absolute top-0 right-0 flex flex-col w-full h-full gap-4 p-4 overflow-auto overflow-x-hidden text-2xl text-left rounded-t-lg bg-violet-500 opacity-90 text-neutral-50"
                 >
                     <AppButton
-                        class="absolute right-0 border-none top-1 focus:border-none"
+                        class="absolute right-0 border-none hover:shadow-none hover:bg-transparent top-1 focus:border-none hover:scale-105"
                         text=""
                         :isDisabled="false"
                         @action="toggleDetails(cocktail)"
