@@ -26,6 +26,12 @@ Docker
 Have fun locally
 
 
+## Run online
+
+```bash
+https://test-cocktail-paradise.netlify.app/
+```
+
 ## Running Tests
 
 To run tests, run the following command
