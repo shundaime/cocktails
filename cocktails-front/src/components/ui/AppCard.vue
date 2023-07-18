@@ -1,13 +1,13 @@
 <template>
     <transition name="fade" appear>
-        <figure class="grid overflow-hidden relative w-full rounded-lg neon-no-blink">
+        <figure class="relative grid w-full overflow-hidden rounded-lg neon-no-blink">
             <img
                 :src="cocktail.strDrinkThumb"
                 :alt="cocktail.strDrink"
                 @load="loading = false"
-                class="object-cover w-full h-72 rounded-t-lg md:h-96"
+                class="object-cover w-full rounded-t-lg h-72 md:h-96"
             />
-            <caption class="flex flex-col gap-4 justify-center p-4 w-full bg-violet-500 transition">
+            <caption class="flex flex-col justify-center w-full gap-4 p-4 transition bg-violet-500">
                 <h2 class="z-10 font-bold">
                     {{ cocktail.strDrink }}
                 </h2>
@@ -37,22 +37,20 @@
     </transition>
 </template>
 
-<script>
-export default {
-    props: {
-        cocktail: Object,
-        selectedCocktail: Object,
-    },
-    methods: {
-        toggleDetails() {
-            this.$emit('toggleDetails', this.cocktail);
-        },
-        getIngredientsAndMeasures() {
-            return {
-                ingredients: [],
-                measures: [],
-            };
-        },
-    },
-};
+<script setup lang="ts">
+const props = defineProps<{ cocktail: Object; selectedCocktail: Object }>();
+const emit = defineEmits<{
+    (e: 'toggleDetails', cocktail: Object): void;
+}>();
+
+function toggleDetails() {
+    emit('toggleDetails', props.cocktail);
+}
+
+function getIngredientsAndMeasures() {
+    return {
+        ingredients: [],
+        measures: [],
+    };
+}
 </script>

@@ -1,27 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted, type Ref } from 'vue';
 
-// components/layout
+// layout
 import Header from './components/layout/AppHeader.vue';
 import Main from './components/layout/AppMain.vue';
 
-// components/ui
-import Loader from './components/ui/AppLoader.vue';
+// ui
 import AppButton from './components/ui/AppButton.vue';
 import AppError from './components/ui/AppError.vue';
 
-// components/utils
-import { fetchApi } from './components/utils/fetchApi';
+// service
+import { fetchApi } from './shared/services/fetchApi';
 
-interface CocktailType {
-    idDrink?: string;
-    strDrink?: string;
-    strDrinkThumb?: string;
-    strInstructions?: string;
-    strIngredient?: string;
-    strMeasure?: string;
-    [key: string]: string | undefined;
-}
+// interface
+import type { CocktailType } from './shared/interface/CocktailType';
 
 const randomCocktail: Ref<null | CocktailType[]> = ref(null);
 const errorMessage = ref('');
@@ -83,10 +75,10 @@ onMounted(fetchCocktails);
 
 <template>
     <AppError v-if="errorMessage" :text="errorMessage" />
-    <div v-else class="flex flex-col gap-4 w-full h-full">
+    <div v-else class="flex flex-col w-full h-full gap-4">
         <Header />
         <Main>
-            <section class="flex flex-col gap-4 justify-end h-full">
+            <section class="flex flex-col justify-end h-full gap-4">
                 <AppButton text="Fetch new cocktails" :isDisabled="loading" @action="fetchCocktails">
                     <ph-circle-notch v-if="loading" :size="32" weight="bold" color="#04d9ff" class="spinner" />
                     <ph-martini
@@ -102,19 +94,20 @@ onMounted(fetchCocktails);
                 >
                     <li v-for="cocktail in randomCocktail" :key="cocktail.idDrink" class="flex w-full group">
                         <transition name="fade" appear>
-                            <figure class="grid overflow-hidden relative w-full rounded-lg neon-no-blink">
+                            <figure class="relative grid w-full overflow-hidden rounded-lg neon-no-blink">
                                 <img
                                     :src="cocktail.strDrinkThumb"
                                     :alt="cocktail.strDrink"
                                     @load="loading = false"
-                                    class="object-cover w-full h-72 rounded-t-lg md:h-96"
+                                    class="object-cover w-full rounded-t-lg h-72 md:h-96"
                                 />
-                                <caption class="flex flex-col gap-4 justify-center p-4 w-full bg-violet-500 transition">
+                                <caption class="flex flex-col justify-center w-full gap-4 p-4 transition bg-violet-500">
                                     <h2 class="z-10 font-bold">
                                         {{ cocktail.strDrink }}
                                     </h2>
                                     <AppButton
                                         :text="selectedCocktail === cocktail ? 'Hide details' : 'Show details'"
+                                        :isDisabled="false"
                                         @action="toggleDetails(cocktail)"
                                     />
                                     <transition name="fade" appear>
