@@ -10,14 +10,13 @@ export default defineConfig({
         vue(),
         vueJsx(),
         VitePWA({
-            registerType: 'autoUpdate',
             includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg', 'favicon.svg'],
-            injectRegister: 'auto',
+            strategies: 'injectManifest',
             base: '/',
             workbox: {
                 clientsClaim: true,
                 skipWaiting: true,
-                globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+                globPatterns: ['**/*.{js,ts,css,html,ico,png,svg}'],
             },
             manifest: {
                 theme_color: '#210b42',
